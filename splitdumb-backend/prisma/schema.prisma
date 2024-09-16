@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id     String  @id @default(uuid())
+  email  String  @unique
+  name   String
+  groups Group[] @relation("UserGroups")
+}
+
+model Group {
+  id        String    @id @default(uuid())
+  name      String
+  type      String
+  picture   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  ownerId   String
+  expenses  Expense[]
+
+  members User[] @relation("UserGroups")
+}
+
+model Expense {
+  id         String   @id @default(uuid())
+  name       String
+  amount     Float
+  date       DateTime
+  type       String // Expense type as a String (e.g. "food", "travel")
+  attachment String? // Optional URL to an attachment
+  groupId    String
+  creatorId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relationships
+  group  Group          @relation(fields: [groupId], references: [id])
+  splits ExpenseSplit[]
+}
+
+model ExpenseSplit {
+  id        String @id @default(uuid())
+  expenseId String
+  userId    String
+  amount    Float // Amount allocated to this user
+
+  // Relationships
+  expense Expense @relation(fields: [expenseId], references: [id])
+
+  @@unique([expenseId, userId]) // A user can only have one split per expense
+}

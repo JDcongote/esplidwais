@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug NestJS App in Watch Mode",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register",
+        "node_modules/.bin/nest",
+        "start",
+        "--watch"
+      ],
+      "cwd": "${workspaceFolder}/splitdumb-backend/",
+      "sourceMaps": true,
+      "restart": true,
+      "outFiles": ["${workspaceFolder}/splitdumb-backend/dist/**/*.js"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "envFile": "${workspaceFolder}/splitdumb-backend/.env"
+    }
+  ]
+}

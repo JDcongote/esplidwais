@@ -14,7 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     console.log('AUTH0_AUDIENCE:', process.env.AUTH0_AUDIENCE);
     console.log(
       'jwksUri:',
-      `${process.env.AUTH0_ISSUER_URL}/.well-known/jwks.json`,
+      `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
     );
     super({
       secretOrKeyProvider: passportJwtSecret({
@@ -36,10 +36,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: unknown): unknown {
-    console.log('Received payload:', JSON.stringify(payload, null, 2));
-    console.log('Expected audience:', process.env.AUTH0_AUDIENCE);
-    console.log('Expected issuer:', process.env.AUTH0_ISSUER_URL);
-    return payload;
+  validate(
+    accessToken: string,
+    refreshToken: string,
+    extraParams: any,
+    profile: any,
+  ): unknown {
+    const user = {
+      profile,
+      accessToken, // Save access token here
+      refreshToken, // Optionally save the refresh token
+    };
+    return user;
   }
 }
