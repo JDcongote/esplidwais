@@ -1,6 +1,6 @@
-import { User } from "@/types/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useQuery } from "@tanstack/react-query";
+import { User } from "../types";
 
 export const useGetUser = () => {
   const { getAccessTokenSilently } = useAuth0();

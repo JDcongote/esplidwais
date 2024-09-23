@@ -1,9 +1,9 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../Guards/AuthGuard';
 import { Auth0Token, Auth0TokenReturn } from '../decorators/user-id.decorator';
 import { Group } from '@prisma/client';
-import { GroupsService } from '@/services/groups.service';
-import { CreateGroupDialogRequest } from '@/types';
+import { GroupsService } from '../services/groups.service';
+import { CreateGroupDialogRequest } from '../types';
 
 @Controller('groups')
 export class GroupsController {
@@ -16,5 +16,11 @@ export class GroupsController {
     @Body() data: CreateGroupDialogRequest,
   ): Promise<Group> {
     return this.groupsService.createGroup(authData.id, data);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/all')
+  getGroups(@Auth0Token() authData: Auth0TokenReturn): Promise<Group[]> {
+    return this.groupsService.getAllGroups(authData.id);
   }
 }

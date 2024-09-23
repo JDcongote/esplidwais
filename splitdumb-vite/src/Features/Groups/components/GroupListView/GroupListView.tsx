@@ -3,9 +3,9 @@ import { Group } from "@/types/types";
 import { Settings2 } from "lucide-react";
 import { GroupItem } from "./components/GroupItem";
 
-export const GroupListView = ({ groups }: { groups: Group[] }) => {
+export const GroupListView = ({ groups }: { groups: Group[] | undefined }) => {
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white font-sans space-y-6 px-4">
+    <div className="flex flex-col h-screen text-white font-sans space-y-6 px-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl font-normal">
           Overall, you are owed
@@ -20,7 +20,7 @@ export const GroupListView = ({ groups }: { groups: Group[] }) => {
           <Settings2 />
         </svg>
       </div>
-      {groups.map((group) => {
+      {groups?.map((group) => {
         return <GroupItem group={group} />;
       })}
       <p className="text-center self-center text-gray-400 text-sm mt-6 mb-2 w-10/12">

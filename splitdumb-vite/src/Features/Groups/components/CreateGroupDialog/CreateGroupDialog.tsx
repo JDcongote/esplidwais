@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { X, Camera, Plane, Home, Heart, Users, Menu } from "lucide-react";
+import { X, Plane, Home, Heart, Users, Menu } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/Components/ui/dialog";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import { useCreateGroupDialog } from "./useCreateGroupDialog";
+import { useCreateGroupDialog } from "../../hooks/useCreateGroupDialog";
 import { FormProvider } from "react-hook-form";
 import { useDialogContext } from "@/Contexts/Dialog.Context";
-import { TypeField } from "../fields/TypeField";
+import { GroupTypeField } from "../../../../Components/fields/GroupTypeField";
+import { ImageField } from "../../../../Components/fields/ImageField";
 
 export const CreateGroupDialog = ({
   isDialogOpen,
@@ -14,8 +14,7 @@ export const CreateGroupDialog = ({
   isDialogOpen: boolean;
 }) => {
   const { setIsOpen } = useDialogContext();
-  const { methods, register, submit } = useCreateGroupDialog();
-  const [selectedType, setSelectedType] = useState("");
+  const { methods, errors, register, submit } = useCreateGroupDialog();
 
   const groupTypes = [
     { name: "Trip", icon: <Plane className="w-4 h-4" /> },
@@ -27,7 +26,6 @@ export const CreateGroupDialog = ({
 
   const handleSubmit = () => {
     submit();
-    setIsOpen(false);
   };
 
   return (
@@ -61,14 +59,14 @@ export const CreateGroupDialog = ({
             <div className="flex-grow p-4 overflow-y-auto">
               <div className="mb-6">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-gray-800 p-4 rounded-lg">
-                    <Camera className="w-6 h-6 text-white" />
-                  </div>
+                  <ImageField name="picture" />
                   <Input
                     autoFocus
                     placeholder="Group name"
-                    className="bg-transparent border-b border-emerald-400 focus:border-2 focus-visible:ring-offset-0 focus-visible:ring-0"
-                    {...register("name")}
+                    className="flex-1 bg-transparent border-b border-emerald-400 focus:border-2 focus-visible:ring-offset-0 focus-visible:ring-0"
+                    {...register("name", {
+                      required: "Group name is required",
+                    })}
                   />
                 </div>
               </div>
@@ -76,12 +74,12 @@ export const CreateGroupDialog = ({
               <div className="w-full">
                 <h2 className="text-lg mb-3">Type</h2>
                 <div className="flex flex-wrap gap-2">
-                  {groupTypes.map((type) => (
-                    <TypeField isSelected={false} {...type} />
-                  ))}
+                  <GroupTypeField groups={groupTypes} name="type" />
                 </div>
               </div>
             </div>
+            {errors.name && <p role="alert">{errors.name.message}</p>}
+            {errors.type && <p role="alert">{errors.type.message}</p>}
           </div>
         </FormProvider>
       </DialogContent>

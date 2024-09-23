@@ -17,9 +17,6 @@ export class UserService {
       where: {
         id,
       },
-      include: {
-        groups: true,
-      },
     });
     if (existingUser) {
       return existingUser;
@@ -32,9 +29,6 @@ export class UserService {
     };
     return this.prisma.user.create({
       data: user,
-      include: {
-        groups: true,
-      },
     });
   }
 

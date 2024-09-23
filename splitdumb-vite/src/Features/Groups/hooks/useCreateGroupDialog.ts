@@ -1,8 +1,10 @@
-import { useCreateGroup } from "@/services/queries/group.mutation";
-import { CreateGroupDialogRequest } from "@/types/types";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useDialogContext } from "../../../Contexts/Dialog.Context";
+import { useCreateGroup } from "../api/group.mutation";
+import { CreateGroupDialogRequest } from "../types";
 
 export const useCreateGroupDialog = () => {
+  const { setIsOpen } = useDialogContext();
   const { mutateAsync: createGroup } = useCreateGroup();
   const methods = useForm<CreateGroupDialogRequest>();
   const {
@@ -12,6 +14,7 @@ export const useCreateGroupDialog = () => {
   } = methods;
   const onSubmit: SubmitHandler<CreateGroupDialogRequest> = (data) => {
     createGroup(data);
+    setIsOpen(false);
   };
 
   return { methods, submit: handleSubmit(onSubmit), register, errors };
